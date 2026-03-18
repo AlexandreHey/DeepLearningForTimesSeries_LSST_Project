@@ -14,8 +14,6 @@ from imblearn.over_sampling import SMOTE
 
 
 device = torch.device("cuda" if torch.cuda.is_available() else ("mps" if torch.backends.mps.is_available() else "cpu"))
-print(f"🚀 Running on: {device}")
-
 
 ds = UCR_UEA_datasets()
 X_train, y_train, X_test, y_test = ds.load_dataset("LSST")
@@ -71,7 +69,6 @@ if not os.path.exists(model_save_path):
         {'params': model_pt.reconstructor.parameters(), 'lr': 1e-4}
     ])
     
-    print("\n--- 🧠 Phase 1 : Masked Modeling ---")
     for epoch in range(400):
         model_pt.train()
         epoch_loss = 0
@@ -143,6 +140,6 @@ classifier.eval()
 with torch.no_grad():
     test_preds = classifier(torch.tensor(X_test_f, dtype=torch.float32).to(device)).argmax(dim=1).cpu().numpy()
 
-print(f"\n✅ ACCURACY FINALE : {accuracy_score(y_test_idx, test_preds)*100:.2f}%")
+print(f"\n ACCURACY FINALE : {accuracy_score(y_test_idx, test_preds)*100:.2f}%")
 target_names = [str(cls) for cls in le.classes_]
 print(classification_report(y_test_idx, test_preds, target_names=target_names))
